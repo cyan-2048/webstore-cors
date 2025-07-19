@@ -63,8 +63,10 @@ async function handleRequest(request) {
           const json = await resp.json();
 
           return new Response(JSON.stringify(json), {
-            "Content-Type": "application/json",
-            ...corsHeaders,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders,
+            },
           });
         }
       } catch {}
