@@ -86,7 +86,9 @@ async function handleRequest(request) {
       } catch {}
     }
 
-    return new Response(null, { status: 404 });
+    return new Response(null, { status: 404, headers: {
+      ...corsHeaders
+    } });
   }
 
   return new Response(null, {
