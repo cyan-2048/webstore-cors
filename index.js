@@ -6,7 +6,7 @@
  * Change the corHeaders below to modify the type of requests and headers
  * to accept
  */
-const allowedMethods = "GET, OPTIONS";
+const allowedMethods = "GET, HEAD, OPTIONS";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://store.bananahackers.net",
   "Access-Control-Allow-Methods": allowedMethods,
@@ -53,13 +53,27 @@ async function handleRequest(request) {
 
     if (url) {
       try {
+        const isHeadRequest = request.method == "HEAD";
+
         const resp = await fetch(url, {
           headers: {
             Accept: "application/json",
           },
+          method: isHeadRequest ? "HEAD" : "GET",
         });
 
         if (resp.ok) {
+
+          // handle webstore content-length feature
+          if (isHeadRequest) {
+            return new Response(null, {
+              headers: {
+                "Content-Length": resp.headers.get("Content-Length") ?? undefined,
+                ...corsHeaders,
+              }
+            })
+          }
+
           const json = await resp.json();
 
           return new Response(JSON.stringify(json), {
