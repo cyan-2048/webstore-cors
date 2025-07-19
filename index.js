@@ -57,7 +57,7 @@ async function handleRequest(request) {
 
         const resp = await fetch(url, {
           headers: {
-            Accept: "application/json",
+            Accept: isHeadRequest ? "*/*" : "application/json",
           },
           method: isHeadRequest ? "HEAD" : "GET",
         });
